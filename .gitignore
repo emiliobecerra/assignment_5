@@ -2,3 +2,9 @@ catalog.csv
 estimation_sample.csv
 holdout_sample_with_prediction.csv
 holdout_sample_with_prediction_and_rank.csv
+doc1.aux
+doc1.fdb_latexmk
+doc1.log
+doc1.pdf
+doc1.synctex.gz
+regression_table.tex

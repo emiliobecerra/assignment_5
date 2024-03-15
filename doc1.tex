@@ -1,0 +1,206 @@
+\documentclass[a4paper,12pt]{article}
+\usepackage{graphicx}
+\usepackage{float}
+\usepackage{color}
+
+\begin{document}
+\title{Assignment 5}
+\author{Emilio Becerra}
+\date{\ March 15, 2024}
+\maketitle
+
+\section{Estimation}
+Using the estimation sample, estimate a binary logit model to model the
+probability of a customer buying from the catalog using all variables available to the
+consumer. Report and explain whether the estimates are reasonable or not.
+\vspace{12pt}
+\begin{table}[H] \centering
+\begin{tabular}{ll}
+Variable Names \\
+\hline
+Variable & Description\\
+\hline
+customer no & Customer id, can be linked to address \\
+buytabw & 1 = bought, 0 = did not buy from catalog \\
+tabordrs & Total orders from tabloids \\
+divsords & Orders with shoe division \\
+divword & Orders with women’s division \\
+spgtabord & Total spring tabloid orders \\ 
+moslsdvs & Months since last shoe order \\
+moslsdvw & Months since last women’s order \\
+moslstab & Months since last tab order \\ 
+orders  & Total orders \\
+holdout & = 1 if part of the holdout sample \\
+\hline
+\end{tabular}
+\end{table}
+\input{regression_table.tex}
+\vspace{12pt}
+\textbf{ANS:} 
+Every variable except divords: ``Orders with shoe division'' is significant.
+All of the ``months since...'' variables have a negative magnitude which makes sense:
+We expect that the longer consumers go without buying an item, the less likely they 
+are in buying from the catalog when it gets mailed to them. The rest of the variables
+are positive and we expect them to be. They all specifiy customer sales. The more items
+each customer has bought the more likely we expect them to buy from the catalog.
+
+\section{Validation}
+Now switch to the holdout worksheet (holdout = 1) and perform your
+analysis there. Using the coefficients from the previous estimation produces probability
+estimates for a validation model. In other words, the previous model estimates will be
+used to make predictions in the holdout sample.
+\begin{itemize}
+\item Explain how we should interpret this event probability and why we performed
+this step using the holdout sample.
+\end{itemize}
+\textbf{ANS:} 
+Using the holdout sample we can do two things:\\ 
+1. We can find our prediction for each customer being a 0 or 1 (buy or no buy)\\
+2. We can find the probability of them buying from the catalog ( = 1).\\
+But in order to properly use the holdout sample it was essential we run our model 
+using the estimation sample, which was derived from the raw catalog.csv dataset. This 
+raw data represents the company's historical consumer data. What we inevitably want 
+to do is make a valid prediction of future consumer behavior. Since we don't have the
+``real world'' future consumer data for `buytabw', we must use the data that we 
+already have to make a reliable model. What we do is split the raw data in half. 
+The estimation sample group serves to create a machine/model to bring over to the 
+holdout sample group. We ran the regression and found that the overall model was 
+significant. In the holdout sample group we obviously have the historical ``buytabw''
+data, but we are going to pretend it doesn't exist to simulate the ``real world''. 
+We predict the outcome for each consumer and get their respective probabilities. 
+All that is left to do now is see how well the model did in estimating ``buytabw''.
+We have the prediction and we have the actual purchase decision. We can look at several
+graphs and tables to better interpret the accuracy.\\
+Here is a confusion matrix with the accuracy results my model found:
+\vspace{12pt}
+\begin{table}[H]
+\begin{tabular}{l|l|l}
+Actual Decision/Prediction &Did Buy& Did Not Buy \\
+\hline
+Predicted Buy & 8355 & 193 \\
+\hline
+Predicted Did not Buy & 1475 & 291 \\
+\end{tabular}
+\end{table}
+As we can see, the model wasn't perfect in predicting. We should be skeptical moving forward. 
+\section{Test}
+In the holdout sample, create box plots using the actual purchase decision on
+the x-axis and the predicted purchase probability on the y-axis. Interpret the graph.
+Do you think the estimated event probability separates those consumers who actually
+bought in the holdout sample?
+\begin{figure}[H]
+\centering
+\includegraphics[width=1\textwidth]{figure_1.png}
+\label{Box Plots of Actual Purchase Decision and Predicted Purchase Probability}
+\end{figure}
+\textbf{ANS:} 
+I would say that it attempts to separate, but strictly, it does not separate them.
+As you can see, the box plots interlap with one another. You cannot truly say that we
+are able to completely separate consumers into two different groups. The outliers
+are also concerning. 
+
+\section{Categorize consumers into groups}
+Create “rank,” a variable that ranks the cus-
+tomers according to their predicted purchase probability. Then, assign each consumer
+to a group, creating a variable called group numbered 1 to 10, where 1 indicates the
+10\% of customers with the lowest purchase probability, and 10 indicates the 10\% of cus-
+tomers with the highest purchase probability. Notice we are separating the consumers
+in deciles.
+\begin{itemize}
+\item Provide box plots with the group variable on the x-axis and the predicted purchase
+probabilities on the y-axis
+\end{itemize}
+\begin{figure}[H]
+\centering
+\includegraphics[width=1\textwidth]{figure_2.png}
+\label{Box Plots of Actual Purchase Decision and Predicted Purchase Probability}
+\end{figure}
+\textbf{ANS:} 
+As group number approaches group 10, the deciles increase in probability of buying
+from the catalog. 
+
+\section{Analyze the marketing strategy}
+At this point we realize that each group has a
+different purchase probability; now we calculate how many buyers we capture by mail-
+ing to each group. The main idea is to order the decile groups that we just created into
+those who are most likely to buy (group 10) to those who are less likely to buy (group
+1) and calculate how many buyers we capture per additional group. For example, you
+will find out that although group 10 comprises 10\% of all the samples, it captures
+about 30\% of all buyers. In contrast, group 1, also with 10\% of all observations, does
+not have any buyers.
+Create two new columns in your table created in part (5): 1) the cumulative number of
+observations (e.g., no. of obs. for groups 10 to 1) and 2) the cumulative no of buyers.
+Create a chart with the cumulative \% of mailed tabloids (10\% for each group) in the
+horizontal axis and the \% of buyers captured by mailings to that group in the vertical
+axis. This is referred in marketing as the ”Gains” chart. Does the gains chart indicate
+that the response model can be useful to the catalog retailer?
+
+\begin{figure}[H]
+\centering
+\includegraphics[width=1\textwidth]{figure_3.png}
+\label{Gains Chart}
+\end{figure}
+\textbf{ANS:} 
+The Gains Chart indicates a positive relationship. We notice that every dot indicates 
+each decile group. The area under the curve going up to the first dot represents 
+the \% of the first decile group. In group 10 (which on the x-axis is 90-100\%),
+the area under the curve is the largest here. This means that when we mail 10\% of our
+mailed tabloids, we capture a certain \% of buyers, which was said to be 30\%.
+
+\section{Estimate Profits}
+Based on past data, the average margin per customer is \$19.5.
+The cost of printing and mailing one tabloid is \$1.0. Using the predicted purchase
+probability, calculate expected profits (for each obs). Provide a histogram of the profit
+variable. Interpret the graph. What fraction of customers is profitable in expectation?
+\begin{figure}[H]
+\centering
+\includegraphics[width=1\textwidth]{figure_4.png}
+\textbf{ANS:} 
+The highest frquency are those customers who actually cause the company financial 
+loss. Then the distribution of expected profit is skewed right, meaning that the majority
+of the customers that give positive profit are going to give the company on average of
+\$2. However, there are customers who in expectation give the company more than 
+\$17.5 of profit.
+I calculated that the fraction of customers that are profitable in expectation: 0.69
+
+\label{Gains Chart}
+\end{figure}
+\section{Decision about the Optimal Mailing Strategy}
+What mailing strategy do you recommend? Compare the actual profitability 
+(you know if they bought or not) from this strategy to the expected profitability based on 
+your model. I.e., for each customer who received a catalog, you compare expected profits 
+and actual profits, given the buytabw variable.
+
+Compare your mailing strategy to a blanket mailing strategy, where all customers
+receive a catalog. What is the percent improvement in profits relative to the blanket
+mailing strategy? \\
+
+\textbf{ANS:}\\
+average margin per customer = 19.5\\
+\vspace{12pt}
+cost of printing and mailing = 1.0\\
+Actual profits from customers who bought: \$32671.00\\
+\begin{itemize}
+\item I found this by doing: \\
+num buyers = (holdout sample['buytabw'] == 1).sum()\\
+actual profits = num buyers * (average margin per customer - cost of printing and mailing)\\
+\end{itemize}
+Expected profits if we only mailed to profitable customers: \$132219.50\\
+\begin{itemize}
+\item I found this by doing:\\
+total observations = len(holdout sample)\\
+num profitable observations = int(total observations * fraction profitable)\\
+\end{itemize}
+Which gives me the number of profitable customers. I then multiply that buy the profit margin:\\
+\begin{itemize}
+\item expected profits profitable customers = num profitable observations *\\
+(average margin per customer - cost of printing and mailing)\\
+\end{itemize}
+Expected profits if we mailed to every customer: \$24123.00\\
+\begin{itemize}
+\item I found this buy summing every customer's profit margins.\\
+\end{itemize}
+Percentage Change Improvement going from Blanket Mailing to Profitable Customer Only Mailing: 81.76\%
+
+\end{document}
+
