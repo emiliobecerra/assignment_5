@@ -7,4 +7,5 @@ doc1.fdb_latexmk
 doc1.log
 doc1.pdf
 doc1.synctex.gz
+doc1.fls
 regression_table.tex
